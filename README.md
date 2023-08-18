@@ -16,6 +16,7 @@ Pip is not currently supported.
 Basic usage:
 -------------
 >from ctool.cestimate import calc_cont
+
 >cont = calc_cont(wavelength,fluxdensity)
 
 Note that you may have to optimize the smoothing parameter <boxsize>. Also be aware that this
