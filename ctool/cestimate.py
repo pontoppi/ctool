@@ -7,7 +7,7 @@ def calc_cont(wave,flux, niter=5, boxsize=95, exclude=None):
 
     cont = copy.deepcopy(flux)
     for ii in np.arange(niter):
-        smooth = medfilt(cont,boxsize)
+        smooth = medfilt(np.array(cont,dtype=float),boxsize)
         csubs = np.where(smooth>cont*0.99)
         cont = np.interp(wave,wave[csubs],cont[csubs])
     cont = savgol_filter(cont,boxsize*3,polyorder=2,mode='mirror')
