@@ -3,13 +3,18 @@ import numpy as np
 import matplotlib.pylab as plt
 from scipy.signal import medfilt,savgol_filter
 
-def calc_cont(wave,flux, niter=5, boxsize=95, exclude=None, threshold=0.998, offset=0, spike_threshold=None):
+def calc_cont(wave,flux, niter=5, boxsize=95, exclude=None, threshold=0.998, offset=0, spike_threshold=None, emission=True):
+
+    if emission:
+        peak_sign = -1
+    else:
+        peak_sign = 1
 
     flux_tmp=copy.deepcopy(flux)
 
     #Remove negative spikes from consideration
     if(spike_threshold is not None):
-        bad_pix, _ = find_peaks(-1*flux_tmp, prominence=spike_threshold)
+        bad_pix, _ = find_peaks(peak_sign*flux_tmp, prominence=spike_threshold)
         flux_tmp[bad_pix] = np.nan
 
     #Exclude regions    
@@ -22,7 +27,10 @@ def calc_cont(wave,flux, niter=5, boxsize=95, exclude=None, threshold=0.998, off
     cont = copy.deepcopy(flux_tmp)            
     for ii in np.arange(niter):
         smooth = medfilt(np.array(cont,dtype=float),boxsize)
-        csubs = np.where(smooth>cont*threshold)   
+        if emission:
+            csubs = np.where(smooth>cont*threshold)   
+        else:
+            csubs = np.where(smooth<cont/threshold)
         cont = np.interp(wave,wave[csubs],cont[csubs])
 
     cont = savgol_filter(cont,boxsize*3,polyorder=2,mode='mirror')
