@@ -1,7 +1,7 @@
 import copy
 import numpy as np
 import matplotlib.pylab as plt
-from scipy.signal import medfilt,savgol_filter
+from scipy.signal import medfilt,savgol_filter,find_peaks
 
 def calc_cont(wave,flux, niter=5, boxsize=95, exclude=None, threshold=0.998, offset=0, spike_threshold=None, emission=True):
 
